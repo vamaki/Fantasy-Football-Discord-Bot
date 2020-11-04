@@ -1,19 +1,24 @@
 import requests
 import json
-import player as p
+import user as u
 
-def createPlayers(leagueID):
+
+# Some urls that are needed in development still
+# https://fantasy.premierleague.com/api/entry/{TEAMID}/transfers/ + latest
+# https://fantasy.premierleague.com/api/entry/{PLAYERID}/event/3/picks/
+
+def createUsers(leagueID):
     url = 'https://fantasy.premierleague.com/api/leagues-classic/{ID}/standings/'.format(ID = leagueID)
     league = json.loads(requests.get(url).text)
-    players = []
+    users = []
     for team in league["standings"]["results"]:
         name = team["player_name"]
         teamName = team["entry_name"]
         id = team["entry"]
-        player = p.Player(name, teamName, id)
-        players.append(player)
+        user = u.User(name, teamName, id)
+        users.append(user)
 
-    return players
+    return users
 
 def getLeagueStandings(leagueID):
     url = 'https://fantasy.premierleague.com/api/leagues-classic/{ID}/standings/'.format(ID = leagueID)
@@ -33,11 +38,11 @@ def chipsPlayed():
         else:
             break
 
-def getPlayerGWHistory(playerID):
-    url = 'https://fantasy.premierleague.com/api/entry/{ID}/history/'.format(ID = playerID)
-    player = json.loads(requests.get(url).text)
+def getUserGWHistory(userID):
+    url = 'https://fantasy.premierleague.com/api/entry/{ID}/history/'.format(ID = userID)
+    user= json.loads(requests.get(url).text)
     history = []
-    for gameweek in player["current"]:
+    for gameweek in user["current"]:
         history.append(gameweek["points"])
 
     return history
