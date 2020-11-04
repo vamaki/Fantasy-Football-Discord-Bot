@@ -1,11 +1,32 @@
 import requests
 import json
 import user as u
+import player as p
 
 
 # Some urls that are needed in development still
 # https://fantasy.premierleague.com/api/entry/{TEAMID}/transfers/ + latest
-# https://fantasy.premierleague.com/api/entry/{PLAYERID}/event/3/picks/
+# https://fantasy.premierleague.com/api/entry/{USERID}/event/3/picks/
+# https://fantasy.premierleague.com/api/element-summary/{PLAYERID}/
+
+def createPlayer(playerID):
+    url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
+    data = json.loads(requests.get(url).text)
+    for player in data["elements"]:
+        if player["id"] == playerID:
+            print("foundz")
+            firstName = player["first_name"]
+            form = player["form"]
+            id = player["id"]
+            cost = player["now_cost"]
+            ppg = player["points_per_game"]
+            lastName = player["second_name"]
+            selectedBy = player["selected_by_percent"]
+            teamID = player["team"]
+            createdPlayer = p.Player(firstName, form, id, cost, ppg, lastName, selectedBy, teamID)
+            break
+
+    return createdPlayer
 
 def createUsers(leagueID):
     url = 'https://fantasy.premierleague.com/api/leagues-classic/{ID}/standings/'.format(ID = leagueID)
